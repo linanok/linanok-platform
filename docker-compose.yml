@@ -7,6 +7,9 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    environment:
+      - APP_NAME=Linanok
+      - VITE_APP_NAME=Linanok
     depends_on:
       postgres:
         condition: service_healthy
@@ -26,6 +29,9 @@ services:
     image: ghcr.io/linanok/linanok/queue:latest
     env_file:
       - .env
+    environment:
+      - APP_NAME=Linanok
+      - VITE_APP_NAME=Linanok
     depends_on:
       postgres:
         condition: service_healthy
@@ -42,9 +48,9 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=linanok
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d linanok" ]
       interval: 5s
@@ -74,3 +80,6 @@ volumes:
 networks:
   app:
     driver: bridge
+    ipam:
+      config:
+        - subnet: ${TRUSTED_PROXIES}
