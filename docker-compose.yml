@@ -64,8 +64,9 @@ services:
     image: redis:8-alpine
     volumes:
       - redis-data:/data
+    command: redis-server --requirepass ${REDIS_PASSWORD}
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: [ "CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping" ]
       interval: 5s
       timeout: 5s
       retries: 5
