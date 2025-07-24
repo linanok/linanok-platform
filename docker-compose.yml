@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  app:
+  web:
     image: ghcr.io/linanok/linanok/web:latest
     ports:
       - "8000:8000"
