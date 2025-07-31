@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: ghcr.io/linanok/linanok/web:latest
+    image: ghcr.io/linanok/linanok/octane:latest
     ports:
       - "8000:8000"
     volumes:
@@ -29,12 +29,13 @@ services:
       start_period: 40s
 
   queue-worker:
-    image: ghcr.io/linanok/linanok/queue:latest
+    image: ghcr.io/linanok/linanok/cli:latest
     env_file:
       - .env
     environment:
       - APP_NAME=Linanok
       - VITE_APP_NAME=Linanok
+    command: ["php", "artisan", "queue:work", "--tries=3", "--max-jobs=1000"]
     depends_on:
       postgres:
         condition: service_healthy
