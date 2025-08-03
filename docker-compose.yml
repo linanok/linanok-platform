@@ -6,8 +6,8 @@ services:
         ports:
             - "8000:8000"
         volumes:
-            - ./:/app:cached
             - frankenphp-data:/tmp
+            - storage-data:/app/storage
         env_file:
             - .env
         environment:
@@ -23,10 +23,9 @@ services:
             - app
         healthcheck:
             test: [ "CMD", "curl", "-f", "http://localhost:8000" ]
-            interval: 30s
-            timeout: 10s
-            retries: 3
-            start_period: 40s
+            interval: 5s
+            timeout: 5s
+            retries: 5
 
     queue-worker:
         image: ghcr.io/linanok/linanok/cli:latest
@@ -36,12 +35,37 @@ services:
             - APP_NAME=Linanok
             - VITE_APP_NAME=Linanok
         command: [ "php", "artisan", "horizon" ]
+        healthcheck:
+            test: [ "CMD-SHELL", "php artisan horizon:status | grep -q 'running'" ]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+        volumes:
+            - storage-data:/app/storage
         depends_on:
             postgres:
                 condition: service_healthy
             redis:
                 condition: service_healthy
         restart: unless-stopped
+        networks:
+            - app
+
+    init:
+        image: ghcr.io/linanok/linanok/cli:latest
+        env_file:
+            - .env
+        environment:
+            - APP_NAME=Linanok
+            - VITE_APP_NAME=Linanok
+        entrypoint: [ "deployment/init.sh" ]
+        volumes:
+            - storage-data:/app/storage
+        depends_on:
+            postgres:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
         networks:
             - app
 
@@ -56,7 +80,7 @@ services:
             - POSTGRES_USER=${DB_USERNAME}
             - POSTGRES_PASSWORD=${DB_PASSWORD}
         healthcheck:
-            test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+            test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}" ]
             interval: 5s
             timeout: 5s
             retries: 5
@@ -72,7 +96,7 @@ services:
             - .env
         command: redis-server --requirepass ${REDIS_PASSWORD}
         healthcheck:
-            test: [ "CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping" ]
+            test: [ "CMD-SHELL", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping" ]
             interval: 5s
             timeout: 5s
             retries: 5
@@ -84,6 +108,7 @@ volumes:
     postgres-data:
     redis-data:
     frankenphp-data:
+    storage-data:
 
 networks:
     app:
