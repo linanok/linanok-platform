@@ -9,6 +9,8 @@
 Linanok Platform is a professional URL shortening application designed for organizations and companies. This repository
 provides prebuilt Docker images and an easy deployment process.
 
+> **Note:** The prebuilt Docker images only support PostgreSQL as the database backend. If you need to use a different database, you'll need to build the images from source.
+
 ## Quick Start
 
 1. **Clone the repository:**
