@@ -6,10 +6,11 @@
 
 # Linanok Platform
 
-Linanok Platform is a professional URL shortening application designed for organizations and companies. This repository
+Linanok is a professional URL shortening application designed for organizations and companies. This repository
 provides prebuilt Docker images and an easy deployment process.
 
-> **Note:** The prebuilt Docker images only support PostgreSQL as the database backend. If you need to use a different database, you'll need to build the images from source.
+> **Note:** The prebuilt Docker images only support PostgreSQL as the database backend. If you need to use a different
+> database, you'll need to build the images from source.
 
 ## Quick Start
 
@@ -81,6 +82,8 @@ variables and their purposes:
 | `REDIS_CACHE_CONNECTION`     | Redis cache connection name                                           | `cache`           |
 
 > **Note:**
+> - The queue worker is managed by [Laravel Horizon](https://laravel.com/docs/horizon), which requires
+    `QUEUE_CONNECTION=redis` in your `.env` file. Horizon only supports Redis as the queue backend.
 > - Some variables are required for the application to function correctly (e.g., `APP_KEY`, database credentials).
 > - Adjust values as needed for your deployment and security requirements.
 
