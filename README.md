@@ -63,19 +63,19 @@ variables and their purposes:
 | `DB_PORT`                    | Database port                                                         | `5432`            |
 | `DB_DATABASE`                | Database name                                                         | `linanok`         |
 | `DB_USERNAME`                | Database username                                                     | `postgres`        |
-| `DB_PASSWORD`                | Database password                                                     | `postgres`        |
+| `DB_PASSWORD`                | Database password                                                     | *(secret)*        |
 | `SESSION_DRIVER`             | Session driver                                                        | `redis`           |
 | `SESSION_LIFETIME`           | Session lifetime (minutes)                                            | `120`             |
-| `SESSION_ENCRYPT`            | Encrypt session data (`true` or `false`)                              | `false`           |
+| `SESSION_ENCRYPT`            | Encrypt session data (`true` or `false`)                              | `true`            |
 | `SESSION_PATH`               | Session cookie path                                                   | `/`               |
 | `SESSION_DOMAIN`             | Session cookie domain                                                 | `null`            |
 | `FILESYSTEM_DISK`            | Default filesystem disk                                               | `local`           |
-| `QUEUE_CONNECTION`           | Queue connection type                                                 | `database`        |
+| `QUEUE_CONNECTION`           | Queue connection type                                                 | `redis`           |
 | `CACHE_STORE`                | Cache store                                                           | `redis`           |
-| `CACHE_PREFIX`               | Cache key prefix                                                      | *(empty)*         |
+| `CACHE_PREFIX`               | Cache key prefix                                                      | predis            |
 | `REDIS_CLIENT`               | Redis client                                                          | `predis`          |
 | `REDIS_HOST`                 | Redis host                                                            | `redis`           |
-| `REDIS_PASSWORD`             | Redis password                                                        | `null`            |
+| `REDIS_PASSWORD`             | Redis password                                                        | *(secret)*        |
 | `REDIS_PORT`                 | Redis port                                                            | `6379`            |
 | `REDIS_DB`                   | Redis database index                                                  | `0`               |
 | `REDIS_CACHE_DB`             | Redis cache database index                                            | `1`               |
