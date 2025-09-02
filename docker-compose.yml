@@ -51,6 +51,27 @@ services:
         networks:
             - linanok
 
+    cli:
+        image: ghcr.io/linanok/linanok/cli:latest
+        env_file:
+            - .env
+        environment:
+            - APP_NAME=Linanok
+            - VITE_APP_NAME=Linanok
+        volumes:
+            - storage-data:/app/storage
+        depends_on:
+            postgres:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+        networks:
+            - app
+        stdin_open: true
+        tty: true
+        profiles:
+            - cli
+
     init:
         image: ghcr.io/linanok/linanok/cli:latest
         env_file:

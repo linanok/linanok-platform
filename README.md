@@ -31,10 +31,56 @@ provides prebuilt Docker images and an easy deployment process.
 
 4. **Create an admin user:**
    ```bash
-   docker-compose exec app php artisan make:super-admin
+   docker-compose run --rm cli php artisan make:super-admin
    ```
 
 The application will be available at [http://localhost:8000](http://localhost:8000).
+
+## Docker Services
+
+The docker-compose.yml file includes the following services:
+
+| Service        | Purpose                                                                              | Image                                   | Ports  |
+|----------------|--------------------------------------------------------------------------------------|-----------------------------------------|--------|
+| `web`          | Main web application server using FrankenPHP/Octane                                  | `ghcr.io/linanok/linanok/octane:latest` | `8000` |
+| `queue-worker` | Background job processor using Laravel Horizon                                       | `ghcr.io/linanok/linanok/cli:latest`    | -      |
+| `cli`          | Interactive CLI container for running artisan commands (profile-based, manual start) | `ghcr.io/linanok/linanok/cli:latest`    | -      |
+| `init`         | One-time initialization container for initial setup                                  | `ghcr.io/linanok/linanok/cli:latest`    | -      |
+| `postgres`     | PostgreSQL database server                                                           | `postgres:17-alpine`                    | -      |
+| `redis`        | Redis server for caching, sessions, and queue management                             | `redis:8-alpine`                        | -      |
+
+### Service Details:
+
+- **web**: The main application server that handles HTTP requests
+- **queue-worker**: Processes background jobs using Laravel Horizon (requires Redis)
+- **cli**: On-demand container for running artisan commands and maintenance tasks
+- **init**: Runs initial setup when the stack starts
+- **postgres**: Database storage with health checks and persistent volumes
+- **redis**: In-memory data store for caching, sessions, and job queues
+
+## CLI Container
+
+For running artisan commands and other CLI operations, you can use the dedicated CLI container:
+
+```bash
+# Run a single artisan command
+docker-compose run --rm cli php artisan <command>
+
+# Start an interactive shell session
+docker-compose run --rm cli bash
+
+# Examples:
+docker-compose run --rm cli php artisan migrate
+docker-compose run --rm cli php artisan queue:work
+docker-compose run --rm cli php artisan tinker
+```
+
+The CLI container:
+
+- Uses the same environment and database connections as the web application
+- Has access to the application storage volume
+- Runs in the same Docker network as other services
+- Is configured with a profile so it doesn't start automatically with `docker-compose up`
 
 ---
 
@@ -94,7 +140,7 @@ variables and their purposes:
 To ensure a secure and reliable production deployment, consider the following best practices:
 
 - **Set a strong, unique `APP_KEY`**: Never use the default or example key in production. Generate a new key with
-  `php artisan key:generate`.
+  `docker-compose run --rm cli php artisan key:generate`.
 - **Disable debug mode**: Set `APP_DEBUG=false` to prevent sensitive information from being exposed.
 - **Use secure passwords**: Change all default database and Redis passwords to strong, unique values.
 - **Restrict trusted proxies**: Set `TRUSTED_PROXIES` to only include your actual proxy or Docker network range.
