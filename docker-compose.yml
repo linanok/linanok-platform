@@ -69,8 +69,6 @@ services:
             - linanok
         stdin_open: true
         tty: true
-        profiles:
-            - cli
 
     init:
         image: ghcr.io/linanok/linanok/cli:latest
