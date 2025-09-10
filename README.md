@@ -31,7 +31,7 @@ provides prebuilt Docker images and an easy deployment process.
 
 4. **Create an admin user:**
    ```bash
-   docker-compose run --rm cli php artisan make:super-admin
+   docker-compose exec cli php artisan make:super-admin
    ```
 
 The application will be available at [http://localhost:8000](http://localhost:8000).
@@ -64,15 +64,15 @@ For running artisan commands and other CLI operations, you can use the dedicated
 
 ```bash
 # Run a single artisan command
-docker-compose run --rm cli php artisan <command>
+docker-compose exec cli php artisan <command>
 
 # Start an interactive shell session
-docker-compose run --rm cli bash
+docker-compose exec cli bash
 
 # Examples:
-docker-compose run --rm cli php artisan migrate
-docker-compose run --rm cli php artisan queue:work
-docker-compose run --rm cli php artisan tinker
+docker-compose exec cli php artisan migrate
+docker-compose exec cli php artisan queue:work
+docker-compose exec cli php artisan tinker
 ```
 
 The CLI container:
@@ -140,7 +140,7 @@ variables and their purposes:
 To ensure a secure and reliable production deployment, consider the following best practices:
 
 - **Set a strong, unique `APP_KEY`**: Never use the default or example key in production. Generate a new key with
-  `docker-compose run --rm cli php artisan key:generate`.
+  `docker-compose exec cli php artisan key:generate`.
 - **Disable debug mode**: Set `APP_DEBUG=false` to prevent sensitive information from being exposed.
 - **Use secure passwords**: Change all default database and Redis passwords to strong, unique values.
 - **Restrict trusted proxies**: Set `TRUSTED_PROXIES` to only include your actual proxy or Docker network range.
