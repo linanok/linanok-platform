@@ -51,6 +51,30 @@ services:
         networks:
             - linanok
 
+    scheduler:
+        image: ghcr.io/linanok/linanok/cli:latest
+        env_file:
+            - .env
+        environment:
+            - APP_NAME=Linanok
+            - VITE_APP_NAME=Linanok
+        command: [ "sh", "-c", "while true; do php artisan schedule:run; sleep 60; done" ]
+        volumes:
+            - storage-data:/app/storage
+        depends_on:
+            postgres:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+        restart: unless-stopped
+        networks:
+            - linanok
+        healthcheck:
+            test: [ "CMD-SHELL", "php artisan --version" ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+
     cli:
         image: ghcr.io/linanok/linanok/cli:latest
         env_file:

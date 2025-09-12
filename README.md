@@ -44,6 +44,7 @@ The docker-compose.yml file includes the following services:
 |----------------|--------------------------------------------------------------------------------------|-----------------------------------------|--------|
 | `web`          | Main web application server using FrankenPHP/Octane                                  | `ghcr.io/linanok/linanok/octane:latest` | `8000` |
 | `queue-worker` | Background job processor using Laravel Horizon                                       | `ghcr.io/linanok/linanok/cli:latest`    | -      |
+| `scheduler`    | Runs Laravel's task scheduler every minute                                           | `ghcr.io/linanok/linanok/cli:latest`    | -      |
 | `cli`          | Interactive CLI container for running artisan commands (profile-based, manual start) | `ghcr.io/linanok/linanok/cli:latest`    | -      |
 | `init`         | One-time initialization container for initial setup                                  | `ghcr.io/linanok/linanok/cli:latest`    | -      |
 | `postgres`     | PostgreSQL database server                                                           | `postgres:17-alpine`                    | -      |
@@ -53,6 +54,7 @@ The docker-compose.yml file includes the following services:
 
 - **web**: The main application server that handles HTTP requests
 - **queue-worker**: Processes background jobs using Laravel Horizon (requires Redis)
+- **scheduler**: Executes `php artisan schedule:run` every minute to run scheduled tasks
 - **cli**: On-demand container for running artisan commands and maintenance tasks
 - **init**: Runs initial setup when the stack starts
 - **postgres**: Database storage with health checks and persistent volumes
@@ -126,12 +128,26 @@ variables and their purposes:
 | `REDIS_DB`                   | Redis database index                                                  | `0`               |
 | `REDIS_CACHE_DB`             | Redis cache database index                                            | `1`               |
 | `REDIS_CACHE_CONNECTION`     | Redis cache connection name                                           | `cache`           |
+| `MAXMIND_LICENSE_KEY`        | Enable GeoLite2 auto-download for IP geolocation analytics            | *(optional)*      |
 
 > **Note:**
 > - The queue worker is managed by [Laravel Horizon](https://laravel.com/docs/horizon), which requires
     `QUEUE_CONNECTION=redis` in your `.env` file. Horizon only supports Redis as the queue backend.
 > - Some variables are required for the application to function correctly (e.g., `APP_KEY`, database credentials).
 > - Adjust values as needed for your deployment and security requirements.
+
+### Optional: MaxMind GeoLite2
+
+If you want country-level geolocation analytics, set `MAXMIND_LICENSE_KEY` in your `.env`. The `scheduler` service
+will automatically download and update the GeoLite2-Country database weekly. Without the key, the app works normally
+but geolocation charts and stats remain empty.
+
+Useful commands:
+
+```bash
+docker-compose exec cli php artisan maxmind:download
+docker-compose exec cli php artisan maxmind:download --force
+```
 
 ---
 
