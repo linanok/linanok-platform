@@ -21,8 +21,9 @@ provides prebuilt Docker images and an easy deployment process.
    ```
 
 2. **Configure environment variables:**
-    - Copy the provided `.env` file and adjust the values as needed for your environment. See
-      the [Environment Variables](#environment-variables) section below for details on each variable.
+
+- Edit the `.env` file in the project root and adjust the values as needed for your environment. See
+  the [Environment Variables](#environment-variables) section below for details on each variable.
 
 3. **Start with Docker Compose:**
    ```bash
