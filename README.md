@@ -165,3 +165,12 @@ To ensure a secure and reliable production deployment, consider the following be
 - **Monitor logs and health**: Set up log monitoring and use the built-in health checks for all services.
 - **Resource tuning**: Adjust worker counts and resource limits based on your expected load and available hardware.
 - **Keep images up to date**: Regularly update Docker images to receive security and performance improvements.
+
+## Security Policy
+
+If you discover a security vulnerability in Linanok, please **do not open a public issue**.  
+Instead, report it responsibly by emailing us at **security@linanok.com**. We will review the report
+promptly and work on a fix. Once resolved, we’ll release a security update and credit you if desired.
+
+For more details on our security process, see
+the [SECURITY.md](https://github.com/linanok/linanok/blob/main/SECURITY.md) file.
